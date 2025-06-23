@@ -2233,8 +2233,12 @@ Email: ivan@email.com"""
 def main():
     """Start the bot"""
     try:
+        print("🚀 Starting bot initialization...")
         bot = CarRentalBot()
+        print("✅ Bot instance created")
+        
         application = Application.builder().token(BOT_TOKEN).build()
+        print(f"✅ Application built with token: {BOT_TOKEN[:5]}...")
 
         # Debug handler to print all updates
         async def debug_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -2250,11 +2254,13 @@ def main():
             return False
 
         # Add debug handler first
+        print("📝 Setting up handlers...")
         application.add_handler(MessageHandler(filters.ALL, debug_handler), group=-1)
-
-        # Add language selection handler
+        
+        # Add handlers
         application.add_handler(CommandHandler("start", bot.start))
         application.add_handler(CallbackQueryHandler(bot.handle_language_selection, pattern="^lang_"))
+        print("✅ Basic handlers added")
 
         # Add booking handler
         booking_handler = ConversationHandler(
@@ -2294,6 +2300,7 @@ def main():
             ],
             per_message=False
         )
+        print("✅ Booking handler configured")
 
         # Add review handler
         review_handler = ConversationHandler(
@@ -2315,6 +2322,7 @@ def main():
             ],
             per_message=False
         )
+        print("✅ Review handler configured")
 
         # Add handlers
         application.add_handler(booking_handler)
@@ -2329,16 +2337,20 @@ def main():
         application.add_handler(CallbackQueryHandler(bot.show_privacy_policy, pattern="^privacy_policy$"))
         application.add_handler(CallbackQueryHandler(bot.show_main_menu, pattern="^main_menu$"))
         application.add_handler(CallbackQueryHandler(bot.start, pattern="^change_language$"))
+        print("✅ All handlers added successfully")
 
         # Add error handler
         application.add_error_handler(bot.error_handler)
+        print("✅ Error handler configured")
 
         print("🚗 CarRental Bot is starting...")
         application.run_polling()
 
     except Exception as e:
         logger.error(f"Fatal error: {e}")
+        print(f"❌ Fatal error: {str(e)}")
         raise
 
 if __name__ == '__main__':
+    print("🔄 Starting main function...")
     main() 
